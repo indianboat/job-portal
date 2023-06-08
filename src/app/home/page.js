@@ -1,28 +1,25 @@
 "use client";
 
-import { redirect, useRouter } from 'next/navigation';
-import { destroyCookie, parseCookies } from 'nookies';
-import jwt from "jsonwebtoken";
+import { redirect } from 'next/navigation';
+import { useSession, signOut } from 'next-auth/react';
 
 const Dashboard = () => {
 
-  const router = useRouter();
-  const { token } = parseCookies();
+  const { data:session, status} = useSession({
+    required:true,
+    onUnauthenticated(){
+      redirect("/login");
+    }
+  })
 
-  if(!token){
-    return router.push("/login");
-  }
-  const session = jwt.decode(token);
-
-  const userLogout = () =>{
-    destroyCookie(undefined, "token", { path:"/", secure:true });
-    router.push("/login");
+  async function handleSignout() {
+    signOut();
   }
 
   return (
     <>
-    <div>Welcome to Home page {session?.name}</div>
-    <button type='submit' onClick={userLogout} className='px-4 py-1 bg-red-200 text-red-600'>Logout</button>
+      <div>Welcome to Home page {session?.user.name}</div>
+      <button type='submit' onClick={handleSignout} className='px-4 py-1 bg-red-200 text-red-600'>Logout</button>
     </>
   )
 }

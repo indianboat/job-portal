@@ -18,8 +18,7 @@ const handler = async (req, res) => {
         if (!matchPassword) {
           res.status(400).json({ message: "Invalid Credentials" });
         } else {
-          const token = jwt.sign({id: userExist._id, email:userExist.email, name:userExist.name}, process.env.TOKEN_KEY, {expiresIn:"1h"});
-          res.status(200).json({ message: "Login success", token });
+          res.status(200).json({ message: "Login success" });
         }
       }
     } catch (error) {

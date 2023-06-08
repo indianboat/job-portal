@@ -2,12 +2,17 @@
 
 import { useFormik } from "formik";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { setCookie } from "nookies";
+import { redirect, useRouter } from "next/navigation";
+import { signIn, useSession} from "next-auth/react";
 
 const Login = () => {
 
   const router = useRouter();
+  const { data:session} = useSession();
+
+  if(session){
+    redirect("/home");
+  }
  
   const formik = useFormik({
     initialValues: {
@@ -17,32 +22,20 @@ const Login = () => {
     onSubmit,
   });
 
-  async function onSubmit(values){
-    try {
-      const res = await fetch("/api/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(values),
-      });
+  async function onSubmit(values) {
+    const status = await signIn("credentials", {
+      redirect: false,
+      email: values.email,
+      password: values.password,
+      callbackUrl: "/home",
+    });
 
-      const data = await res.json();
-
-      if (data.message == "User not found!") {
-        alert("User not found!");
-      }
-      else if(data.message == "Invalid Credentials"){
-        alert("Invalid Credentials");
-      }
-      else if(data.message == "Login success"){
-        setCookie(null, "token", data.token, { secure: process.env.NODE_ENV=="production", maxAge:60*60*5 });
-        router.push("/home");
-      }
-    } catch (error) {
-      alert(error.toString())
+    if (status.ok) {
+      router.push(status.url);
+    } else {
+      alert(status.error);
     }
-  };
+  }
 
   return (
     <>
