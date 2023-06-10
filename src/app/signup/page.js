@@ -29,8 +29,6 @@ const Signup = () => {
       body: JSON.stringify(values),
     });
 
-    console.log(res);
-
     if (res.status == 422) {
       toast("User already exists !");
     } 
