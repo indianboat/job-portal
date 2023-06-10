@@ -28,13 +28,17 @@ const Signup = () => {
       body: JSON.stringify(values),
     });
 
+    console.log(res);
+
     if (res.statusText == "User already exists !") {
       alert("User already exists !");
-    } else if ( res.statusText == "Sign up Success") {
+    } 
+    else if ( res.statusText == "Sign up Success") {
       alert("Sign up Success");
       formik.resetForm({values:""});
       router.push("/login");
-    } else if (res.statusText == "Internal Server Error") {
+    } 
+    else if (res.statusText == "Internal Server Error") {
       alert("Internal Server Error");
     } else  {
       alert(res.statusText + " 500 Server Error");

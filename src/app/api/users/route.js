@@ -9,7 +9,7 @@ export const GET = async (request) =>{
       return new NextResponse(JSON.stringify(result), {status:200});
     } 
    catch (error) {
-    return new NextResponse("500 Server Error"+error, {status:500});
+    return NextResponse.json({error:"500 Internal Server Error: "+error}, {status:500});
   }
 }
 
