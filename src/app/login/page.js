@@ -2,12 +2,11 @@
 
 import { useFormik } from "formik";
 import Link from "next/link";
-import { redirect, useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
 import { signIn, useSession} from "next-auth/react";
 
 const Login = () => {
 
-  const router = useRouter();
   const { data:session} = useSession();
 
   if(session){
@@ -30,11 +29,12 @@ const Login = () => {
       callbackUrl: "/home",
     });
 
-    if (status.ok) {
-      router.push(status.url);
-    } else {
-      alert(status.error);
+    if(status.error == null){
+      redirect("/home")
     }
+    else{
+      alert(status.error);
+    }    
   }
 
   return (

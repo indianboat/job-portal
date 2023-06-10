@@ -9,7 +9,8 @@ const handler = NextAuth({
     CredentialsProvider({
       name: "Credentials",
       async authorize(credentials){
-        connectDB(handler);
+        await connectDB();
+
         const { email, password } = credentials;
 
         const userExist = await User.findOne({ email });

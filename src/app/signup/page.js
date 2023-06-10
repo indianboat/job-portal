@@ -3,8 +3,11 @@
 import React from 'react';
 import { useFormik } from 'formik';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 const Signup = () => {
+
+  const router = useRouter();
 
   const formik = useFormik({
     initialValues:{
@@ -25,17 +28,16 @@ const Signup = () => {
       body: JSON.stringify(values),
     });
 
-    const data = await res.json();
-
-    if (data.message == "User already exists !") {
+    if (res.statusText == "User already exists !") {
       alert("User already exists !");
-    } else if ( data.message == "Sign up Success") {
+    } else if ( res.statusText == "Sign up Success") {
       alert("Sign up Success");
-      formik.resetForm({values:""})
-    } else if (data.message == "Server Error, try again later") {
-      alert("Server Error, try again later");
-    } else if (data.message) {
-      alert(data.message);
+      formik.resetForm({values:""});
+      router.push("/login");
+    } else if (res.statusText == "Internal Server Error") {
+      alert("Internal Server Error");
+    } else  {
+      alert(res.statusText + " 500 Server Error");
     }
   }
 
