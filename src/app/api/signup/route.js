@@ -11,16 +11,17 @@ export const POST = async (req) => {
     const userExist = await User.findOne({ email });
 
     if (userExist) {
-      return NextResponse.json({ message: 'User already exists !' }, { status: 500, statusText:"User already exists !" })
+      // return NextResponse.json({ message: 'User already exists !' }, { status: 500, statusText:"User already exists !" });
+      return new NextResponse('User already exists !', { status: 422, statusText:"User already exists !" });
     } else {
       const passHash = await argon2i.hash(password);
       const result = new User({ name, email, mobile, password: passHash });
       const data = await result.save();
 
       if (data) {
-        return NextResponse.json({ message: 'Sign up Success' },{ status: 201, statusText:"Sign up Success"});
+        return new NextResponse('Sign up Success',{ status: 201, statusText:"Sign up Success"});
       } else {
-        return NextResponse.json({ message: 'Internal Server Error' }, { status: 422, statusText:"Internal Server Error" });
+        return new NextResponse('Internal Server Error', { status: 422, statusText:"Internal Server Error" });
       }
     }
 

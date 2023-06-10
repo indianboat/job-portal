@@ -36,12 +36,10 @@ const Signup = () => {
       alert("Sign up Success");
       formik.resetForm({values:""});
       router.push("/login");
+      console.log(res);
     } 
     else if (res.statusText == "Internal Server Error") {
       alert("Internal Server Error");
-      console.log(res);
-    } else  {
-      alert(res.statusText + "500 Server Error");
       console.log(res);
     }
   }
