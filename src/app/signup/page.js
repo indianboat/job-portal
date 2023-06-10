@@ -4,6 +4,7 @@ import React from 'react';
 import { useFormik } from 'formik';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import toast, { Toaster } from 'react-hot-toast';
 
 const Signup = () => {
 
@@ -28,24 +29,26 @@ const Signup = () => {
       body: JSON.stringify(values),
     });
 
+    console.log(res);
+
     if (res.statusText == "User already exists !") {
-      alert("User already exists !");
-      console.log(res);
+      toast("User already exists !");
     } 
+    
     else if ( res.statusText == "Sign up Success") {
-      alert("Sign up Success");
+      toast("Sign up Success");
       formik.resetForm({values:""});
       router.push("/login");
-      console.log(res);
     } 
+
     else if (res.statusText == "Internal Server Error") {
-      alert("Internal Server Error");
-      console.log(res);
+      toast("Internal Server Error, Please try again later !");
     }
   }
 
   return (
     <>
+    <Toaster/>
      <div className="flex p-8">
      <form onSubmit={formik.handleSubmit} className='flex flex-col'>
       <Link href={"/"}>Home</Link>
