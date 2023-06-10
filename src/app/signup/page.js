@@ -33,13 +33,13 @@ const Signup = () => {
       toast("User already exists !");
     } 
     
-    else if ( res.statusText == 201) {
+    else if ( res.status == 201) {
       toast("Sign up Success");
       formik.resetForm({values:""});
       router.push("/login");
     } 
 
-    else if (res.statusText == 500) {
+    else if (res.status == 500) {
       toast("Internal Server Error, Please try again later !");
     }
   }
