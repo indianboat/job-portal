@@ -25,6 +25,6 @@ export const POST = async (req) => {
     }
 
   } catch (error) {
-    return NextResponse.json({ message: 'Internal Server Error '+error }, { status: 500, statusText:"Internal Server Error" });
+    return new NextResponse('Internal Server Error:'+error, { status: 500, statusText:"Internal Server Error" });
   }
 };

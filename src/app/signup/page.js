@@ -28,10 +28,9 @@ const Signup = () => {
       body: JSON.stringify(values),
     });
 
-    console.log(res);
-
     if (res.statusText == "User already exists !") {
       alert("User already exists !");
+      console.log(res);
     } 
     else if ( res.statusText == "Sign up Success") {
       alert("Sign up Success");
@@ -40,8 +39,10 @@ const Signup = () => {
     } 
     else if (res.statusText == "Internal Server Error") {
       alert("Internal Server Error");
+      console.log(res);
     } else  {
-      alert(res.statusText + " 500 Server Error");
+      alert(res.statusText + "500 Server Error");
+      console.log(res);
     }
   }
 
