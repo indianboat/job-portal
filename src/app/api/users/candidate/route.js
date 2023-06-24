@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
-import connectDB from "../../../../middleware/db";
-import User from "../../../../models/user";
+import connectDB from "../../../../../middleware/db";
+import Candidate from "../../../../../models/candidate";
 
 export const GET = async (request) =>{
   try {
     await connectDB();
-      const result = await User.find({});
+      const result = await Candidate.find({});
       return new NextResponse(JSON.stringify(result), {status:200});
     } 
    catch (error) {

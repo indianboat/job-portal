@@ -1,10 +1,11 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import connectDB from "../../../../../middleware/db";
-import User from "../../../../../models/user";
+import Candidate from "../../../../../models/candidate";
+import Company from "../../../../../models/company";
 import argon2i from "argon2";
 
-const handler = NextAuth({
+export const authOptions = {
   providers:[
     CredentialsProvider({
       name: "Credentials",
@@ -13,7 +14,7 @@ const handler = NextAuth({
 
         const { email, password } = credentials;
 
-        const userExist = await User.findOne({ email });
+        const userExist = await Candidate.findOne({ email }) || await Company.findOne({ email });
 
         if (!userExist) {
           throw new Error("User Does not Exist !");
@@ -24,9 +25,7 @@ const handler = NextAuth({
         if (!matchPassword || userExist.email !== email) {
           throw new Error("Invalid Credentials");
         }
-        else{
-          return userExist;
-        }
+        return userExist;
       }
     })
   ],
@@ -34,6 +33,11 @@ const handler = NextAuth({
     colorScheme: "light",
   },
   secret: process.env.NEXTAUTH_SECRET,
-});
+  pages:{
+    signIn:"/login",
+  }
+}
+
+const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST }

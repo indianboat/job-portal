@@ -4,15 +4,12 @@ import { useFormik } from "formik";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { signIn, useSession} from "next-auth/react";
+import toast, { Toaster } from 'react-hot-toast';
 
 const Login = () => {
 
-  const { data:session} = useSession();
+  const { status } = useSession();
 
-  if(session){
-    redirect("/home");
-  }
- 
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -22,26 +19,40 @@ const Login = () => {
   });
 
   async function onSubmit(values) {
-    const status = await signIn("credentials", {
+    const res = await signIn("credentials", {
       redirect: false,
       email: values.email,
       password: values.password,
-      callbackUrl: "/home",
+      callbackUrl: "/dashboard",
     });
 
-    if(status.error == null){
-      redirect("/home")
+    if(res.error == null){
+      toast.success("Login success, redirecting...")
+      setInterval(() => {
+        redirect(res.url);
+      }, 2500);
     }
     else{
-      alert(status.error);
+      toast.error(res.error, { duration:2500});
     }    
   }
 
+  if(status === "loading"){
+    return "loading..."
+  }
+  if(status === "authenticated"){
+    redirect("/dashboard");
+  }
+ 
   return (
     <>
+    <Toaster/>
+
       <div className="flex p-8">
+   
+
         <form onSubmit={formik.handleSubmit} className="flex flex-col">
-          <Link href={"/"}>Home</Link>
+          
           <input
             required
             className="border px-4 py-1"
@@ -65,7 +76,7 @@ const Login = () => {
             Login
           </button>
           Dont have an account?
-          <Link href={"/signup"} className="border px-4 py-1 text-center mt-4">
+          <Link href={"/candidate/signup"} className="border px-4 py-1 text-center mt-4">
             Sign up
           </Link>
         </form>

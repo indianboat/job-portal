@@ -1,20 +1,20 @@
 import { NextResponse } from "next/server";
-import connectDB from "../../../../middleware/db";
-import User from "../../../../models/user";
+import connectDB from "../../../../../middleware/db";
+import Company from "../../../../../models/company";
 import argon2i from "argon2";
 
 export const POST = async (req) => {
-  const { name, email, mobile, password } = await req.json();
+  const { name, email, mobile, password, role, cname, designation } = await req.json();
 
   try {
     await connectDB();
-    const userExist = await User.findOne({ email });
+    const userExist = await Company.findOne({ email });
 
     if (userExist) {
-      return NextResponse.json({ error: 'User already exists !' }, { status: 422});
+      return NextResponse.json({ error: 'User already exists !' }, { status: 422 });
     } else {
       const passHash = await argon2i.hash(password);
-      const result = new User({ name, email, mobile, password: passHash });
+      const result = new Company({ name, email, mobile, password: passHash, role, cname, designation });
       const data = await result.save();
 
       if (data) {
